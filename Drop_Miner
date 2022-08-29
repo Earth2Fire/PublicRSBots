@@ -1,0 +1,188 @@
+#Set to drop adamantite may need small changes for other ores
+#IMAGES mine_adamantite_ore.png, adamantite_ore.png
+
+import win32api
+import win32con
+import time
+import random
+from pyclick import HumanClicker
+import pyautogui
+import sys
+
+# Pre-requisites
+hc = HumanClicker()
+inventory_rock = 'adamantite_ore.png'
+img_rock = 'mine_adamantite_rock.png'
+# Number of times loops will cycle
+finish_loop = 315
+
+# Detects ore rocks in inventory and drops them to a random area.
+def drop_ore():
+    should_cont = False
+    rock_num = 0
+    inventory_locations = list(pyautogui.locateAllOnScreen(inventory_rock, confidence=0.9))
+    while should_cont == False:
+        try:
+            check_for_ore = (inventory_locations[rock_num])
+            print(check_for_ore)
+            if check_for_ore == None:
+                should_cont = True
+            if check_for_ore != None:
+                print("checked ore")
+                xl, yl, xh, yh = check_for_ore  # unpacking tuple
+                print(xl, yl, xh, yh)
+                xmod = int(xl) + int(xh)
+                ymod = int(yl) + int(yh)
+                xx = random.randint(xl, xmod)
+                yy = random.randint(yl, ymod)
+                move_time = random.randint(33, 55)
+                hc.move((xx, yy), move_time / 100)
+                win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, xx, yy, 0, 0)
+                tm = random.randint(114, 285)
+                time.sleep(tm / 1000)
+                move_time = random.randint(768, 1245)
+                decide_drop_area = random.randint(1, 22)
+                if decide_drop_area < 5:
+                    xl, yl, xh, yh = small_drop_area
+                    xx = random.randint(xl, xh)
+                    yy = random.randint(yl, yh)
+                if decide_drop_area >= 5:
+                    xl, yl, xh, yh = large_drop_area
+                    xx = random.randint(xl, xh)
+                    yy = random.randint(yl, yh)
+                hc.move((xx, yy), move_time / 1000)
+                win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, xx, yy, 0, 0)
+                sleep_time_for_proccessing = random.randint(167, 299)
+                time.sleep(sleep_time_for_proccessing / 1000)
+        except:
+            print("no more rocks in inventory")
+            should_cont = True
+
+        rock_num = rock_num + 1
+
+#Clicks on rocks to refresh mining efficiency bar
+def click_rocks():
+    short_anti_ban()
+    fini = False
+    failsafe = 0
+    while fini == False:
+        xl, yl, xh, xy = first_ore  # unpacking tuple
+        xx = random.randint(xl, xh)
+        yy = random.randint(yl, yl)
+        add_dimension_to_click = random.randint(1, 4)
+        if add_dimension_to_click == 3:
+            dimension_amount = random.randint(-5, 5)
+            xx = xx + (dimension_amount)
+        elif add_dimension_to_click == 4:
+            dimension_amount = random.randint(-5, 5)
+            yy = yy + (dimension_amount)
+        ta = random.randint(88, 107)
+        hc.move((xx, yy), ta / 100)
+        check_hover = pyautogui.locateOnScreen(img_rock, confidence=0.9)
+        sleep_time = random.randint(452, 657)
+        time.sleep(sleep_time / 1000)
+        if check_hover == None:
+            failsafe = failsafe + 1
+            if failsafe == 30:
+                sys.exit('fail safe triggered')
+        if check_hover != None:
+            click(xx, yy)
+            failsafe = 0
+        decide_sleep = random.randint(1,3)
+        if decide_sleep == 1:
+            sleep_time = random.randint(22197, 84955)
+            time.sleep(sleep_time / 1000)
+        if decide_sleep == 2:
+            sleep_time = random.randint(24523, 31999)
+            time.sleep(sleep_time / 1000)
+        if decide_sleep == 3:
+            sleep_time = random.randint(19011, 27134)
+            time.sleep(sleep_time / 1000)
+
+        xl, yl, xh, xy = second_ore  # unpacking tuple
+        xx = random.randint(xl, xh)
+        yy = random.randint(yl, yl)
+        add_dimension_to_click = random.randint(1, 4)
+        if add_dimension_to_click == 3:
+            dimension_amount = random.randint(-5, 5)
+            xx = xx + (dimension_amount)
+        elif add_dimension_to_click == 4:
+            dimension_amount = random.randint(-5, 5)
+            yy = yy + (dimension_amount)
+        ta = random.randint(88, 107)
+        hc.move((xx, yy), ta / 100)
+        check_hover = pyautogui.locateOnScreen(img_rock, confidence=0.9)
+        sleep_time = random.randint(452, 657)
+        time.sleep(sleep_time / 1000)
+        if check_hover == None:
+            failsafe = failsafe + 1
+            if failsafe == 30:
+                sys.exit('fail safe triggered')
+        if check_hover != None:
+            click(xx, yy)
+            failsafe = 0
+        sleep_time = random.randint(42197, 84955)
+        time.sleep(sleep_time / 1000)
+        fini = True
+
+# Randomly decides to move off screen to give appearence of multi-tasking
+def short_anti_ban():
+    print("running short anti ban")
+    decide_if_antiban = random.randint(1, 112)
+    if decide_if_antiban < 31:
+        xl, yl, xh, yh = delay_area_for_mouse
+        xx = random.randint(xl, xh)
+        yy = random.randint(yl, yh)
+        ta = random.randint(107, 183)
+        hc.move((xx, yy), ta / 100)
+
+# Clicking hueristics for mouse
+def click(x, y):
+    win32api.SetCursorPos((x, y))
+    win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, x, y, 0, 0)
+    tm = random.randint(214, 385)
+    time.sleep(tm / 1000)
+    win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, x, y, 0, 0)
+
+# Part of set up, tell script where rocks will be
+def get_coords():
+    input("Press enter when cursor is on first corner of click area.")
+    aa, bb = win32api.GetCursorPos()
+    print(aa, bb)
+    input("process break")
+    input("Press enter when cursor is on second corner of click area.")
+    cc, dd = win32api.GetCursorPos()
+    print(cc, dd)
+    return aa, bb, cc, dd
+
+# def get_coords put to work.
+#first ore
+print("first ore")
+first_ore = get_coords()
+print("second ore")
+second_ore = get_coords()
+print("Large drop area")
+large_drop_area = get_coords()
+print("Small drop area")
+small_drop_area = get_coords()
+print("delay area for mouse")
+delay_area_for_mouse =get_coords()
+
+finish_commanded = False
+repeat_loop = 0
+
+# The main loop
+while finish_commanded == False:
+    repetitions_clicks = random.randint(2, 4)
+    move_on = 0
+    while repetitions_clicks != move_on:
+        click_rocks()
+        move_on = move_on + 1
+
+    drop_ore()
+
+    repeat_loop = repeat_loop + 1
+
+    if finish_loop == repeat_loop:
+        finish_commanded = True
+        sys.ext('Mining completed')
